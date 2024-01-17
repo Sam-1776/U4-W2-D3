@@ -91,7 +91,13 @@ public class Main {
         }).forEach(System.out::println);
 
         System.out.println("----- Esercizio 4 -----");
-        ordini.stream().filter(order -> order.customer.tier.equals(2)).filter(isBetween).forEach(System.out::println);
+        List<Order> listaTemp;
+        listaTemp = ordini.stream().filter(order -> order.customer.tier.equals(2)).filter(isBetween).toList();
+        List<Product> prodottiNelTempo = new ArrayList<>();
+        for(Order order : listaTemp){
+            prodottiNelTempo.addAll(order.products);
+        }
+        System.out.println(prodottiNelTempo);
 
     }
 
