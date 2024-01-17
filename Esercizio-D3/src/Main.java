@@ -22,7 +22,14 @@ public class Main {
         LocalDate fine = LocalDate.parse("2021-04-01");
         Predicate<Order> isBetween = x -> (x.orderDate.isAfter(inizio)) && (x.orderDate.isBefore(fine));
         Predicate<Product> isMinorThanHundred = x -> x.price < 100;
+        Predicate<Product> isCategosyBooks = x -> x.category.equals(Categorie.books);
         Predicate<Product> isCategoryBoy = x -> x.category.equals(Categorie.boys);
+        Predicate<Order> hasProductCategoryBaby = x -> {
+            for (int i = 0; i < x.products.size(); i++) {
+                x.products.get(i).category.equals(Categorie.baby);
+            }
+            return true;
+        };
 
         List<Product> warehouse = new ArrayList<>();
         List<Customer> utenti = new ArrayList<>();
@@ -72,13 +79,14 @@ public class Main {
 
 
         System.out.println("----- Esercizio 1 -----");
-        warehouse.stream().filter(isMinorThanHundred).forEach(product -> System.out.println(product));
+        warehouse.stream().filter(isMinorThanHundred.and(isCategosyBooks)).forEach(product -> System.out.println(product));
 
         System.out.println("----- Esercizio 2 -----");
+        ordini.stream().filter(hasProductCategoryBaby).forEach(System.out::println);
 
         System.out.println("----- Esercizio 3 -----");
         warehouse.stream().filter(isCategoryBoy).map(p -> {
-            p.price -= p.price * 0.1;
+            p.price -= p.price * 0.9;
             return p;
         }).forEach(System.out::println);
 
