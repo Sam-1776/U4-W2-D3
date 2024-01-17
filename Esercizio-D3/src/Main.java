@@ -20,7 +20,9 @@ public class Main {
         Long id = rdm.nextLong();
         LocalDate inizio = LocalDate.parse("2021-02-01");
         LocalDate fine = LocalDate.parse("2021-04-01");
-        Predicate<LocalDate> isBetween = x -> (x.isAfter(inizio)) && (x.isBefore(fine));
+        Predicate<Order> isBetween = x -> (x.orderDate.isAfter(inizio)) && (x.orderDate.isBefore(fine));
+        Predicate<Product> isMinorThanHundred = x -> x.price < 100;
+        Predicate<Product> isCategoryBoy = x -> x.category.equals(Categorie.boys);
 
         List<Product> warehouse = new ArrayList<>();
         List<Customer> utenti = new ArrayList<>();
@@ -51,7 +53,7 @@ public class Main {
                     warehouse.add(new Product(i,str,Categorie.boys,p));
                 }
             }
-            Integer nCO = rdm.nextInt(20);
+            Integer nCO = rdm.nextInt(50);
             for (int i = 0; i < nCO; i++) {
                 Integer t = rdm.nextInt(1,3);
 
@@ -70,18 +72,18 @@ public class Main {
 
 
         System.out.println("----- Esercizio 1 -----");
-        warehouse.stream().filter(product -> product.price < 100).forEach(product -> System.out.println(product));
+        warehouse.stream().filter(isMinorThanHundred).forEach(product -> System.out.println(product));
 
         System.out.println("----- Esercizio 2 -----");
 
         System.out.println("----- Esercizio 3 -----");
-        warehouse.stream().filter(product -> product.category.equals(Categorie.boys)).map(p -> {
+        warehouse.stream().filter(isCategoryBoy).map(p -> {
             p.price -= p.price * 0.1;
             return p;
         }).forEach(System.out::println);
 
         System.out.println("----- Esercizio 4 -----");
-        ordini.stream().filter(order -> order.customer.tier.equals(2)).filter(order -> order.orderDate.isAfter(inizio) && order.orderDate.isBefore(fine)).forEach(System.out::println);
+        ordini.stream().filter(order -> order.customer.tier.equals(2)).filter(isBetween).forEach(System.out::println);
 
     }
 
